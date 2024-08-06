@@ -29,6 +29,7 @@ signUpForm.addEventListener('submit', (e) => {
     })
     .catch(error => {
         console.error('There was a problem with the fetch operation:', error);
+        userinfo.innerHTML="<h1>Email selection is not good select some other email."
     });
 
     document.getElementById('email').value = "";
