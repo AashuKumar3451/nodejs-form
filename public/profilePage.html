@@ -10,10 +10,46 @@
 </head>
 
 <body>
-    <h1>Hello: ----!</h1>
-    <h1>Password: -----!</h1>
+    <h1 id="email"></h1>
+    <h1 id="password"></h1>
 
+    <script>
+        const email = document.getElementById("email");
+        const password = document.getElementById("password");
 
+        document.addEventListener('DOMContentLoaded', () => {
+            const token = localStorage.getItem('token');
+
+            fetch('/profile', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    if (response.status === 401) {
+                        // Handle expired token or unauthorized
+                        alert("Token Expired");
+                        window.location.href = 'http://localhost:3000/';
+                        throw new Error('Token expired');
+                    }
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok ' + response.statusText);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log(data); // Process user data
+                    email.innerHTML = `Hello: ${data.user.email}`;
+                    password.innerHTML = `Hashed Password: ${data.user.password}`;
+                })
+                .catch(error => {
+                    console.error('There was a problem with the fetch operation:', error);
+                });
+        });
+
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
         integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
         crossorigin="anonymous"></script>

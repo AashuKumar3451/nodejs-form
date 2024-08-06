@@ -1,5 +1,3 @@
-// const { response } = require("express");
-
 const signInForm = document.getElementById("signInForm");
 const userinfo = document.getElementById("userinfo");
 signInForm.addEventListener("submit", (e) => {
@@ -28,35 +26,12 @@ signInForm.addEventListener("submit", (e) => {
     })
     .then((data) => {
       userinfo.innerHTML = `${data.user.email}  ${data.token}`;
-      localStorage.setItem("token", data.token);
       alert("SignIn successful!");
+      localStorage.setItem("token", data.token);
 
       document.getElementById("email").value = "";
       document.getElementById("password").value = "";
     });
 
-  // document.getElementById('email').value = "";
-  // document.getElementById('password').value = "";
 });
 
-if (window.location.pathname === "/profile") {
-  fetch("/profile", {
-    method: "GET",
-    headers: {
-      "Authorization": `Bearer ${localStorage.getItem("token")}`
-    }
-  })
-  .then(response => {
-    if (response.status === 401) {
-      throw new Error("Unauthorized: Please log in.");
-    }
-    return response.json();
-  })
-  .then(data => {
-    console.log("Profile Data:", data);
-  })
-  .catch(err => {
-    console.error("Error:", err);
-  });
-  
-}

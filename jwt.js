@@ -11,13 +11,15 @@ const jwtMiddleware = function(req,res,next){
         req.userPayload = decoded;
         next();
     } catch (error) {
-        console.log("Error");
+        if (error.message === 'Token expired') {
+            window.location.href = 'http://localhost:3000/';
+        }
         res.status(401).json({error: 'Invalid token'});
     }
 }
 
 const generateJWT = function(userData){
-    return jwt.sign(userData,process.env.secret_Key);
+    return jwt.sign(userData,process.env.secret_Key,{expiresIn:30});
 }
 
 module.exports = {jwtMiddleware,generateJWT};
